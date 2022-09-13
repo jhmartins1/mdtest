@@ -1,0 +1,47 @@
+This file describes API changes in /reportbuilder/*
+Information provided here is intended especially for developers.
+
+=== 4.1 ===
+
+* New external method `core_reportbuilder_set_filters` for setting report filter values (plus `setFilters` AJAX repository
+  export for calling from Javascript modules)
+* New method `set_filter_form_default` in base system report class, to override whether the default filters form
+  should be shown for a report
+* The external `core_reportbuilder_filters_reset` method now accepts an optional `parameters` argument, required by
+  some system reports
+* New external methods for retrieving custom report data:
+  - `core_reportbuilder_view_report`
+* 'set_default_per_page' and 'get_default_per_page' methods have been added to \local\report\base class
+  to manage the default displayed rows per page.
+* Added two new methods in the datasource class:
+  - add_all_from_entity() to add all columns/filters/conditions from the given entity to the report at once
+  - add_all_from_entities() to add all columns/filters/conditions from all the entities added to the report at once
+* New database helper methods for generating multiple unique values: `generate_aliases` and `generate_param_names`
+* The base aggregation `format_value` method has a `$columntype` argument in order to preserve type during aggregation. When
+  defining column callbacks, strict typing will now be preserved in your callback methods when the column is being aggregated
+* The method `get_joins()` in the base entity class is now public, allowing for easier joins within reports
+* The following local helper methods have been deprecated, their implementation moved to exporters:
+  - `audience::get_all_audiences_menu_types` -> `custom_report_audience_cards_exporter`
+  - `report::get_available_columns` -> `custom_report_column_cards_exporter`
+* The `custom_report_exporter` class now defines its editor element properties as optional, rather than each of those exporters
+  defining their own properties as optional. In turn, this means the structure of the following external methods will always be
+  present and consistent:
+  - `core_reportbuilder_columns_*`
+  - `core_reportbuilder_conditions_*`
+  - `core_reportbuilder_filters_*`
+* The following permission methods now accept an optional `$context` parameter (default system context):
+  - `[require_]can_view_reports_list`
+  - `[require_]can_create_report`
+* New method `get_default_condition_values()` in base datasource class, to be overridden by sources that wish to
+  define default values for conditions upon report creation.
+* New methods `get_identity_[column|filter]` in user entity, for retrieving user identity field report elements
+* New report filter types:
+  - `category` for reports containing course categories
+  - `tags` for reports containing entities with support for core_tag API
+  - `autocomplete` for reports that contain pre-defined values for selection.
+* New method `get_sample_values()` added to base filter class, to be overridden in all filter types to support stress testing
+* New test helpers for automated stress testing of report sources:
+  - `datasource_stress_test_columns`
+  - `datasource_stress_test_columns_aggregation`
+  - `datasource_stress_test_conditions`
+* The test helper method `get_custom_report_content()` now accepts a list of filter values and applies them to the report
